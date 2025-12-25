@@ -1,0 +1,153 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { ghostClient } from '../lib/ghost';
+
+import Newsletter from '../components/Newsletter.svelte';
+
+const posts = await ghostClient.posts.browse({
+    limit: 'all',
+    include: ['tags', 'authors']
+}).catch(err => {
+    console.error(err);
+    return [];
+});
+
+const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+    });
+};
+---
+
+<Layout title="ChanakanLabs Editorial">
+	<main class="min-h-screen w-full bg-off-white text-primary">
+		<div class="max-w-400 mx-auto border-x border-primary">
+			
+			<!-- Header Section (Newspaper Masthead) -->
+			<header class="border-b border-primary bg-off-white">
+				<!-- Meta Bar -->
+				<div class="flex justify-between items-center px-4 py-2 border-b border-primary text-xs uppercase tracking-widest font-medium">
+					<span>Vol. 01</span>
+					<span class="hidden md:inline">The Editorial</span>
+					<span>{new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}</span>
+				</div>
+
+				<!-- Masthead Title -->
+				<div class="py-16 md:py-24 px-4 text-center border-b border-primary relative overflow-hidden">
+					<h1 class="font-headline text-[12vw] md:text-[10rem] leading-[0.8] text-primary flex justify-center select-none">
+						CHANAKANLABS
+					</h1>
+					<div class="mt-6 flex justify-center items-center gap-4">
+						<span class="h-px w-12 bg-primary hidden md:block"></span>
+						<p class="text-lg md:text-2xl font-serif italic text-primary/80">Editorial & Stories</p>
+						<span class="h-px w-12 bg-primary hidden md:block"></span>
+					</div>
+				</div>
+			</header>
+
+			<!-- Featured Post -->
+			{posts.length > 0 && (
+				<article class="group relative border-b border-primary">
+					<a href={`/post/${posts[0].slug}`} class="grid md:grid-cols-2 gap-0">
+						{posts[0].feature_image && (
+							<div class="aspect-[4/3] md:aspect-auto md:h-full overflow-hidden border-b md:border-b-0 md:border-r border-primary relative">
+								<img 
+									src={posts[0].feature_image} 
+									alt={posts[0].title}
+									class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+								/>
+                                <div class="absolute inset-0 bg-primary/0 group-hover:bg-primary/5 transition-colors duration-300"></div>
+							</div>
+						)}
+						
+						<div class="p-8 md:p-12 lg:p-16 flex flex-col justify-center bg-off-white transition-colors duration-300 group-hover:bg-primary/5">
+							<div class="flex items-center gap-3 mb-6">
+								{posts[0].primary_tag && (
+									<span class="px-2 py-1 border border-accent-blue text-accent-blue text-xs font-bold uppercase tracking-widest">
+										{posts[0].primary_tag.name}
+									</span>
+								)}
+								<span class="text-xs text-primary/60 uppercase tracking-widest font-medium">
+									{posts[0].published_at ? formatDate(posts[0].published_at) : ''}
+								</span>
+							</div>
+							
+							<h2 class="text-4xl md:text-5xl lg:text-6xl font-headline font-bold leading-[0.95] mb-6 group-hover:text-accent-blue transition-colors">
+								{posts[0].title}
+							</h2>
+							
+							<p class="text-lg md:text-xl text-primary/80 line-clamp-4 font-serif leading-relaxed mb-8">
+								{posts[0].excerpt}
+							</p>
+
+							<div class="flex items-center gap-2 text-sm font-bold uppercase tracking-widest text-primary group-hover:text-accent-blue transition-colors">
+								<span>Read Story</span>
+								<span class="group-hover:translate-x-2 transition-transform duration-300">→</span>
+							</div>
+						</div>
+					</a>
+				</article>
+			)}
+
+			<!-- Recent Posts Grid -->
+			<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-primary border-b border-primary">
+				{posts.slice(1).map((post) => (
+					<article class="group relative flex flex-col h-full bg-off-white transition-colors duration-300 hover:bg-primary/5">
+						<a href={`/post/${post.slug}`} class="flex flex-col h-full">
+							{post.feature_image && (
+								<div class="aspect-[3/2] overflow-hidden border-b border-primary relative">
+									<img 
+										src={post.feature_image} 
+										alt={post.title}
+										class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+									/>
+                                    <div class="absolute inset-0 bg-primary/0 group-hover:bg-primary/5 transition-colors duration-300"></div>
+								</div>
+							)}
+							
+							<div class="p-8 flex flex-col flex-grow justify-between">
+								<div>
+									<div class="flex items-center gap-3 mb-4">
+										{post.primary_tag && (
+											<span class="text-xs font-bold uppercase tracking-widest text-accent-blue">
+												{post.primary_tag.name}
+											</span>
+										)}
+										<span class="text-xs text-primary/60 uppercase tracking-widest">
+											{post.published_at ? formatDate(post.published_at) : ''}
+										</span>
+									</div>
+									
+									<h2 class="text-2xl font-headline font-bold leading-tight mb-4 group-hover:text-accent-blue transition-colors">
+										{post.title}
+									</h2>
+									
+									<p class="text-primary/80 line-clamp-3 font-serif leading-relaxed">
+										{post.excerpt}
+									</p>
+								</div>
+
+								<div class="mt-8 pt-6 border-t border-primary/10 flex justify-between items-center">
+									<span class="text-xs font-bold uppercase tracking-widest group-hover:translate-x-2 transition-transform duration-300">
+										Read Article
+									</span>
+									<span class="text-lg group-hover:translate-x-1 transition-transform duration-300">→</span>
+								</div>
+							</div>
+						</a>
+					</article>
+				))}
+			</div>
+            
+            {posts.length === 0 && (
+                <div class="p-12 text-center font-serif text-xl">
+                    <p>No posts found. Check your Ghost API configuration.</p>
+                </div>
+            )}
+            
+            <Newsletter client:visible />
+		</div>
+	</main>
+</Layout>

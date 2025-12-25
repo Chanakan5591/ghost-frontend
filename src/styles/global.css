@@ -1,0 +1,180 @@
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+@theme {
+    --color-primary: #1E1E1E;
+    --color-off-white: #F7F5F2;
+    --color-accent-orange: #FF4D00;
+    --color-accent-blue: #0038FF;
+    --color-accent-green: #00CC66;
+    --color-accent-purple: #9D00FF;
+    --font-sans: 'Inter', ui-sans-serif, system-ui;
+    --font-serif: 'Newsreader', ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+    --font-headline: 'Newsreader', ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+    --animate-spin-slow: spin 12s linear infinite;
+}
+
+@layer base {
+    body {
+        @apply text-primary font-sans antialiased;
+        background-color: var(--color-off-white);
+    }
+    
+    html {
+        scroll-behavior: smooth;
+    }
+    
+    ::selection {
+        background-color: var(--color-accent-blue);
+        color: white;
+    }
+    
+    h1, h2, h3, h4, h5, h6 {
+        @apply font-serif;
+    }
+}
+
+/* Ghost Content Styles */
+@layer components {
+    /* Images & Galleries */
+    .kg-image-card, .kg-gallery-card {
+        @apply my-8;
+    }
+    
+    .kg-image-card img {
+        @apply h-auto mx-auto rounded-sm;
+    }
+    
+    .kg-width-wide img {
+        @apply max-w-full;
+    }
+    
+    .kg-width-full img {
+        @apply max-w-full;
+    }
+    
+    .kg-image-card figcaption {
+        @apply text-center text-sm text-primary/70 mt-2 font-serif italic;
+    }
+    
+    /* Galleries */
+    .kg-gallery-container {
+        @apply flex flex-col max-w-full;
+    }
+    
+    .kg-gallery-row {
+        @apply flex flex-row justify-center gap-2 mb-2;
+    }
+    
+    .kg-gallery-image img {
+        @apply block m-0 w-full h-full object-cover rounded-sm;
+    }
+    
+    /* Bookmark Cards */
+    .kg-bookmark-card {
+        @apply w-full bg-white border border-primary/10 rounded-lg overflow-hidden my-8 hover:shadow-md transition-shadow;
+    }
+    
+    .kg-bookmark-container {
+        @apply flex text-primary no-underline min-h-[148px];
+    }
+    
+    .kg-bookmark-content {
+        @apply flex flex-col justify-between p-5 grow;
+    }
+    
+    .kg-bookmark-title {
+        @apply font-bold text-lg leading-tight mb-2;
+    }
+    
+    .kg-bookmark-description {
+        @apply text-sm text-primary/70 line-clamp-2 mb-3;
+    }
+    
+    .kg-bookmark-metadata {
+        @apply flex items-center text-xs text-primary/50;
+    }
+    
+    .kg-bookmark-icon {
+        @apply w-5 h-5 mr-2;
+    }
+    
+    .kg-bookmark-thumbnail {
+        @apply relative min-w-[33%] max-h-full hidden sm:block;
+    }
+    
+    .kg-bookmark-thumbnail img {
+        @apply absolute top-0 left-0 w-full h-full object-cover;
+    }
+    
+    /* Callout Cards */
+    .kg-callout-card {
+        @apply flex p-6 rounded-lg bg-primary/5 my-8 border-l-4 border-accent-blue;
+    }
+    
+    .kg-callout-emoji {
+        @apply pr-4 text-2xl;
+    }
+    
+    .kg-callout-text {
+        @apply text-base;
+    }
+    
+    /* Button Cards */
+    .kg-btn {
+        @apply inline-block px-6 py-3 bg-accent-blue text-white no-underline rounded-full transition-opacity hover:opacity-90 font-bold text-sm uppercase tracking-wider my-4;
+    }
+    
+    .kg-btn-accent {
+        @apply bg-accent-orange;
+    }
+
+    /* Embeds */
+    .kg-embed-card {
+        @apply my-8 flex flex-col items-center w-full;
+    }
+    
+    .kg-embed-card iframe {
+        @apply max-w-full;
+    }
+
+    /* Blockquotes */
+    blockquote.kg-blockquote-alt {
+        @apply border-l-4 border-accent-orange pl-6 italic text-xl text-primary/80 my-8 not-italic;
+    }
+
+    /* Header Cards */
+    .kg-header-card {
+        @apply bg-primary text-off-white p-12 text-center rounded-lg my-8 flex flex-col items-center justify-center;
+    }
+    
+    .kg-header-card-header {
+        @apply font-headline text-4xl mb-4;
+    }
+    
+    .kg-header-card-subheader {
+        @apply font-serif text-xl opacity-80;
+    }
+
+    /* Toggle Cards */
+    .kg-toggle-card {
+        @apply border border-primary/20 rounded-lg p-4 my-6 bg-white;
+    }
+    
+    .kg-toggle-heading {
+        @apply flex justify-between items-center cursor-pointer font-bold text-lg;
+    }
+    
+    .kg-toggle-content {
+        @apply mt-4 text-primary/80;
+    }
+
+    /* Code Blocks */
+    pre {
+        @apply bg-primary text-off-white p-6 rounded-lg overflow-x-auto my-8 text-sm font-mono leading-relaxed border border-primary/10 shadow-inner;
+    }
+
+    :not(pre) > code {
+        @apply bg-primary/10 text-accent-blue px-1.5 py-0.5 rounded text-sm font-mono font-medium;
+    }
+}
