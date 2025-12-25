@@ -28,7 +28,14 @@ const formatDate = (dateString: string) => {
 };
 ---
 
-<Layout title={post.title}>
+<Layout 
+    title={post.title}
+    description={post.custom_excerpt || post.excerpt}
+    image={post.feature_image}
+    type="article"
+    publishedTime={post.published_at}
+    authors={post.authors?.map(author => author.name) || []}
+>
     <main class="min-h-screen w-full bg-off-white text-primary">
         <div class="max-w-[1000px] mx-auto border-x border-primary bg-off-white min-h-screen">
             
