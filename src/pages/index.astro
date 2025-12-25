@@ -19,6 +19,17 @@ const formatDate = (dateString: string) => {
         day: 'numeric'
     });
 };
+
+const getYear = (dateString: string) => {
+    return new Date(dateString).getFullYear();
+}
+
+const hoverColors = [
+    'group-hover:text-accent-blue',
+    'group-hover:text-accent-orange',
+    'group-hover:text-accent-green',
+    'group-hover:text-accent-purple'
+];
 ---
 
 <Layout 
@@ -27,7 +38,7 @@ const formatDate = (dateString: string) => {
     type="website"
 >
 	<main class="min-h-screen w-full bg-off-white text-primary">
-		<div class="max-w-400 mx-auto border-x border-primary">
+		<div class="max-w-[1600px] mx-auto border-x border-primary">
 			
 			<!-- Header Section (Newspaper Masthead) -->
 			<header class="border-b border-primary bg-off-white">
@@ -51,102 +62,88 @@ const formatDate = (dateString: string) => {
 				</div>
 			</header>
 
-			<!-- Featured Post -->
-			{posts.length > 0 && (
-				<article class="group relative border-b border-primary">
-					<a href={`/post/${posts[0].slug}`} class="grid md:grid-cols-2 gap-0">
-						{posts[0].feature_image && (
-							<div class="aspect-[4/3] md:aspect-auto md:h-full overflow-hidden border-b md:border-b-0 md:border-r border-primary relative">
-								<img 
-									src={posts[0].feature_image} 
-									alt={posts[0].title}
-									class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-								/>
-                                <div class="absolute inset-0 bg-primary/0 group-hover:bg-primary/5 transition-colors duration-300"></div>
-							</div>
-						)}
-						
-						<div class="p-8 md:p-12 lg:p-16 flex flex-col justify-center bg-off-white transition-colors duration-300 group-hover:bg-primary/5">
-							<div class="flex items-center gap-3 mb-6">
-								{posts[0].primary_tag && (
-									<span class="px-2 py-1 border border-accent-blue text-accent-blue text-xs font-bold uppercase tracking-widest">
-										{posts[0].primary_tag.name}
-									</span>
-								)}
-								<span class="text-xs text-primary/60 uppercase tracking-widest font-medium">
-									{posts[0].published_at ? formatDate(posts[0].published_at) : ''}
-								</span>
-							</div>
-							
-							<h2 class="text-4xl md:text-5xl lg:text-6xl font-headline font-bold leading-[0.95] mb-6 group-hover:text-accent-blue transition-colors">
-								{posts[0].title}
-							</h2>
-							
-							<p class="text-lg md:text-xl text-primary/80 line-clamp-4 font-serif leading-relaxed mb-8">
-								{posts[0].excerpt}
-							</p>
+            <!-- Posts Section -->
+            <div class="flex flex-col">
+                {posts.map((post, index) => {
+                    const isDark = index % 2 === 0;
+                    const bgClass = isDark ? 'bg-primary' : 'bg-off-white';
+                    const textClass = isDark ? 'text-off-white' : 'text-primary';
+                    const borderClass = isDark ? 'border-off-white/20' : 'border-primary';
+                    const metaClass = isDark ? 'text-off-white/60' : 'text-primary/60';
+                    const serifClass = isDark ? 'text-off-white/85' : 'text-primary/85';
+                    const hoverColor = hoverColors[index % hoverColors.length];
 
-							<div class="flex items-center gap-2 text-sm font-bold uppercase tracking-widest text-primary group-hover:text-accent-blue transition-colors">
-								<span>Read Story</span>
-								<span class="group-hover:translate-x-2 transition-transform duration-300">→</span>
-							</div>
-						</div>
-					</a>
-				</article>
-			)}
+                    return (
+                        <a href={`/post/${post.slug}`} class="group block">
+                            <section class={`border-b ${borderClass} ${bgClass} ${textClass} transition-colors duration-500`}>
+                                <div class="grid grid-cols-1 lg:grid-cols-12">
+                                
+                                <!-- Text Section -->
+                                <div class={`lg:col-span-7 p-8 md:p-12 lg:p-16 flex flex-col justify-between ${index % 2 === 1 ? 'lg:order-2 lg:border-l' : 'lg:order-1 lg:border-r'} ${borderClass}`}>
+                                    
+                                    <div class="space-y-8">
+                                    <!-- Meta -->
+                                    <div class="flex items-start justify-between gap-4">
+                                        <div class={`text-xs md:text-sm uppercase tracking-[0.24em] font-medium ${metaClass}`}>
+                                        {post.primary_tag ? post.primary_tag.name : 'Editorial'} / Collection
+                                        </div>
+                                        <div class={`text-xs md:text-sm uppercase tracking-[0.18em] font-medium opacity-70`}>
+                                        {post.published_at ? getYear(post.published_at) : '2025'} · Index
+                                        </div>
+                                    </div>
 
-			<!-- Recent Posts Grid -->
-			<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-primary border-b border-primary">
-				{posts.slice(1).map((post) => (
-					<article class="group relative flex flex-col h-full bg-off-white transition-colors duration-300 hover:bg-primary/5">
-						<a href={`/post/${post.slug}`} class="flex flex-col h-full">
-							{post.feature_image && (
-								<div class="aspect-[3/2] overflow-hidden border-b border-primary relative">
-									<img 
-										src={post.feature_image} 
-										alt={post.title}
-										class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-									/>
-                                    <div class="absolute inset-0 bg-primary/0 group-hover:bg-primary/5 transition-colors duration-300"></div>
-								</div>
-							)}
-							
-							<div class="p-8 flex flex-col flex-grow justify-between">
-								<div>
-									<div class="flex items-center gap-3 mb-4">
-										{post.primary_tag && (
-											<span class="text-xs font-bold uppercase tracking-widest text-accent-blue">
-												{post.primary_tag.name}
-											</span>
-										)}
-										<span class="text-xs text-primary/60 uppercase tracking-widest">
-											{post.published_at ? formatDate(post.published_at) : ''}
-										</span>
-									</div>
-									
-									<h2 class="text-2xl font-headline font-bold leading-tight mb-4 group-hover:text-accent-blue transition-colors">
-										{post.title}
-									</h2>
-									
-									<p class="text-primary/80 line-clamp-3 font-serif leading-relaxed">
-										{post.excerpt}
-									</p>
-								</div>
+                                    <!-- Main Content -->
+                                    <div class="space-y-6">
+                                        <h3 class={`font-headline text-4xl md:text-6xl lg:text-7xl leading-[0.9] ${hoverColor} transition-colors duration-300`}>
+                                        {post.title}
+                                        </h3>
+                                        <p class={`font-serif text-xl md:text-2xl leading-relaxed ${serifClass} max-w-2xl line-clamp-3`}>
+                                        {post.excerpt}
+                                        </p>
+                                    </div>
+                                    </div>
 
-								<div class="mt-8 pt-6 border-t border-primary/10 flex justify-between items-center">
-									<span class="text-xs font-bold uppercase tracking-widest group-hover:translate-x-2 transition-transform duration-300">
-										Read Article
-									</span>
-									<span class="text-lg group-hover:translate-x-1 transition-transform duration-300">→</span>
-								</div>
-							</div>
-						</a>
-					</article>
-				))}
-			</div>
+                                    <!-- Footer Columns -->
+                                    <div class={`grid grid-cols-2 gap-4 md:gap-8 text-xs md:text-sm uppercase tracking-widest font-medium mt-12 pt-8 border-t ${isDark ? 'border-off-white/30' : 'border-primary/30'}`}>
+                                    <div>
+                                        <div class="opacity-60 mb-2">Type</div>
+                                        <div>Article</div>
+                                    </div>
+                                    <div class="text-right">
+                                        <div class="opacity-60 mb-2">Action</div>
+                                        <span class={`group-hover:underline decoration-1 underline-offset-4 ${hoverColor}`}>
+                                        Read Story ↗
+                                        </span>
+                                    </div>
+                                    </div>
+                                </div>
+
+                                <!-- Image Section -->
+                                <div class={`lg:col-span-5 relative min-h-[40vh] lg:min-h-full overflow-hidden ${index % 2 === 1 ? 'lg:order-1' : 'lg:order-2'}`}>
+                                    <div class={`absolute inset-0 ${isDark ? 'bg-primary/20' : 'bg-primary/5'} group-hover:bg-transparent transition-colors duration-500 z-10`}></div>
+                                    {post.feature_image && (
+                                        <img 
+                                            src={post.feature_image} 
+                                            alt={post.title}
+                                            class="absolute inset-0 w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 group-hover:scale-105"
+                                        />
+                                    )}
+                                    {!post.feature_image && (
+                                        <div class={`absolute inset-0 w-full h-full ${isDark ? 'bg-primary' : 'bg-off-white'} flex items-center justify-center`}>
+                                            <span class="text-primary/20 font-headline text-4xl">No Image</span>
+                                        </div>
+                                    )}
+                                </div>
+
+                                </div>
+                            </section>
+                        </a>
+                    );
+                })}
+            </div>
             
             {posts.length === 0 && (
-                <div class="p-12 text-center font-serif text-xl">
+                <div class="p-12 text-center font-serif text-xl border-b border-primary">
                     <p>No posts found. Check your Ghost API configuration.</p>
                 </div>
             )}
